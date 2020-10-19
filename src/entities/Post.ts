@@ -17,4 +17,10 @@ export class Post extends BaseEntity {
   @Field(() => User)
   @ManyToOne()
   author!: User
+
+  constructor(title: string, text: string) {
+    super()
+    this.title = title
+    this.text = text
+  }
 }

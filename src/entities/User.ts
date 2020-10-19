@@ -14,10 +14,12 @@ export class User extends BaseEntity {
   pass: string
 
   @Field(() => [Post])
-  @OneToMany(
-    () => Post,
-    p => p.author,
-    { cascade: [Cascade.ALL] }
-  )
+  @OneToMany(() => Post, p => p.author, { cascade: [Cascade.ALL] })
   posts = new Collection<Post>(this)
+
+  constructor(email: string, pass: string) {
+    super()
+    this.email = email
+    this.pass = pass
+  }
 }
