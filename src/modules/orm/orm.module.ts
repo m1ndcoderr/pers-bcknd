@@ -1,4 +1,4 @@
-import { EntityRepository, wrap } from '@mikro-orm/core'
+import { EntityRepository } from '@mikro-orm/core'
 import { MongoHighlighter } from '@mikro-orm/mongo-highlighter/MongoHighlighter'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { MikroOrmModule } from '@mikro-orm/nestjs/mikro-orm.module'
@@ -32,17 +32,17 @@ export class OrmModule implements OnModuleInit {
   async onModuleInit(): Promise<void> {
     const admin_1 = await this.userRepo.count({ email: process.env.ADMIN_1_EMAIL })
     if (!admin_1) {
-      const author = await this.userRepo.persistAndFlush(
-        wrap(new User()).assign({ email: process.env.ADMIN_1_EMAIL, pass: await hash(process.env.ADMIN_1_PASS) })
-      )
+      const user = new User(process.env.ADMIN_1_EMAIL, await hash(process.env.ADMIN_1_PASS))
+      const post = new Post('First test post', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at.')
 
-      await this.postRepo.persistAndFlush(
-        wrap(new Post()).assign({
-          title: 'First test post',
-          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at.',
-          author
-        })
-      )
+      user.posts.add(post)
+      post.author = user
+
+      this.userRepo.persist(user)
+      this.postRepo.persist(post)
+
+      await this.userRepo.flush()
+      await this.postRepo.flush()
     }
   }
 }
