@@ -18,9 +18,10 @@ export class Post extends BaseEntity {
   @ManyToOne()
   author!: User
 
-  constructor(title: string, text: string) {
+  constructor(title: string, text: string, author: User) {
     super()
     this.title = title
     this.text = text
+    this.author = author
   }
 }

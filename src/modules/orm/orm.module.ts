@@ -33,10 +33,9 @@ export class OrmModule implements OnModuleInit {
     const admin_1 = await this.userRepo.count({ email: process.env.ADMIN_1_EMAIL })
     if (!admin_1) {
       const user = new User(process.env.ADMIN_1_EMAIL, await hash(process.env.ADMIN_1_PASS))
-      const post = new Post('First test post', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at.')
+      const post = new Post('First test post', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at.', user)
 
       user.posts.add(post)
-      post.author = user
 
       this.userRepo.persist(user)
       this.postRepo.persist(post)

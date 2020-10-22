@@ -7,6 +7,7 @@ import { AuthService } from './auth.service'
 
 @Module({
   imports: [ConfigModule.forRoot(), OrmModule, UserModule],
-  providers: [AuthService, AuthResolver]
+  providers: [AuthService, AuthResolver],
+  exports: [AuthService]
 })
 export class AuthModule {}

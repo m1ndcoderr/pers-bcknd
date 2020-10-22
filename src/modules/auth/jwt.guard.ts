@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common'
+import { CanActivate, ExecutionContext, Inject, Injectable, Logger } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { AuthService } from './auth.service'
 
@@ -6,7 +6,7 @@ import { AuthService } from './auth.service'
 export class JwtGuard implements CanActivate {
   private readonly logger = new Logger(JwtGuard.name)
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(@Inject(AuthService) private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
