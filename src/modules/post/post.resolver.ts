@@ -1,10 +1,9 @@
 import { EntityRepository } from '@mikro-orm/mongodb'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { BadRequestException, NotFoundException, UseGuards } from '@nestjs/common'
-import { Args, Context, Field, Int, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
+import { NotFoundException } from '@nestjs/common'
+import { Args, Field, Int, ObjectType, Query, Resolver } from '@nestjs/graphql'
 import { Post } from 'src/entities/Post'
 import { User } from 'src/entities/User'
-import { JwtGuard } from '../auth/jwt.guard'
 
 @ObjectType()
 export class PaginatedPosts {
@@ -37,24 +36,24 @@ export class PostResolver {
     return { posts, limit, offset, count }
   }
 
-  @ResolveField('author', () => User)
-  async author(@Parent() post: Post): Promise<User> {
-    const { author } = post
-    return this.userRepo.findOne({ id: author.id })
-  }
+  // @ResolveField('author', () => User)
+  // async author(@Parent() post: Post): Promise<User> {
+  //   const { author } = post
+  //   return this.userRepo.findOne({ id: author.id })
+  // }
 
-  @UseGuards(JwtGuard)
-  @Mutation(() => Post)
-  async create(@Context('id') id: string, @Args('title') title: string, @Args('text') text: string): Promise<Post> {
-    let post = await this.postRepo.findOne({ title })
-    if (post) {
-      throw new BadRequestException('Post already exists')
-    }
+  // @UseGuards(JwtGuard)
+  // @Mutation(() => Post)
+  // async create(@Context('id') id: string, @Args('title') title: string, @Args('text') text: string): Promise<Post> {
+  //   let post = await this.postRepo.findOne({ title })
+  //   if (post) {
+  //     throw new BadRequestException('Post already exists')
+  //   }
 
-    const author = await this.userRepo.findOne(id)
-    await this.postRepo.persistAndFlush(new Post(title, text, author))
-    post = await this.postRepo.findOne({ title })
+  //   const author = await this.userRepo.findOne(id)
+  //   await this.postRepo.persistAndFlush(new Post(title, text, author))
+  //   post = await this.postRepo.findOne({ title })
 
-    return post
-  }
+  //   return post
+  // }
 }
